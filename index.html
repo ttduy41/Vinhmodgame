@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP ADR&PC | vinhmodlag.store</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        :root { --primary: #00f2ff; --accent: #ff0055; --bg: #0d1117; --card: #161b22; --text: #c9d1d9; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .btn-main { background: var(--primary); color: #000; }
+        #auth-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 10000; }
+        .auth-box { background: var(--card); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; border: 1px solid #30363d; }
+        .auth-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #333; }
+        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; color: #8b949e; }
+        .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); font-weight: bold; }
+        header { background: var(--card); padding: 15px 5%; border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1100px; margin: auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+    </style>
+</head>
+<body>
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h2 style="text-align:center; color: var(--primary);">vinhmodlag.store</h2>
+            <div class="auth-tabs">
+                <div class="tab active" onclick="setAuth('login')">Đăng Nhập</div>
+                <div class="tab" onclick="setAuth('reg')">Đăng Ký</div>
+            </div>
+            <div id="form-auth">
+                <input type="text" id="u-id" placeholder="Gmail hoặc SĐT">
+                <input type="password" id="u-pw" placeholder="Mật khẩu">
+                <button class="btn btn-main" id="btn-action" onclick="handleAuth()">VÀO CỬA HÀNG</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-shop" style="display: none;">
+        <header>
+            <h3>MENU THẬP CẨM</h3>
+            <div style="background:#238636; padding:5px 15px; border-radius:20px;">💰 <span id="bal">0</span>đ</div>
+        </header>
+        <div class="container">
+            <div class="grid">
+                <div class="card"><h3>ACC CLONE LV 5 FF</h3><p>Giá: 5.000đ</p><button class="btn btn-main">MUA</button></div>
+                <div class="card"><h3>MENU BR MOD ADR&PC</h3><p>Giá từ: 20.000đ</p><button class="btn btn-main">MUA</button></div>
+                <div class="card"><h3>FAKE LAG ADR</h3><p>Giá từ: 15.000đ</p><button class="btn btn-main">MUA</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MÃ FIREBASE THẬT CỦA DUY ĐÃ ĐƯỢC CHÈN VÀO ĐÂY
+        const firebaseConfig = {
+          apiKey: "AIzaSyDQh9wzSEwVEYe0VbPyfTnWi5aGS-lo7iY",
+          authDomain: "vinhmod-e6ebe.firebaseapp.com",
+          projectId: "vinhmod-e6ebe",
+          storageBucket: "vinhmod-e6ebe.firebasestorage.app",
+          messagingSenderId: "280126075845",
+          appId: "1:280126075845:web:7d443d6ca997d5aa37d1ac",
+          measurementId: "G-CP40QM3EFF"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        let mode = 'login';
+
+        function setAuth(m) {
+            mode = m;
+            document.getElementById('btn-action').innerText = m === 'login' ? 'VÀO CỬA HÀNG' : 'ĐĂNG KÝ NGAY';
+        }
+
+        function handleAuth() {
+            const email = document.getElementById('u-id').value + "@vinh.store";
+            const pass = document.getElementById('u-pw').value;
+            if (mode === 'reg') {
+                auth.createUserWithEmailAndPassword(email, pass)
+                    .then(() => alert("Đăng ký thành công!"))
+                    .catch(e => alert(e.message));
+            } else {
+                auth.signInWithEmailAndPassword(email, pass)
+                    .then(() => {
+                        document.getElementById('auth-overlay').style.display = 'none';
+                        document.getElementById('main-shop').style.display = 'block';
+                    })
+                    .catch(e => alert("Sai tài khoản hoặc mật khẩu!"));
+            }
+        }
+    </script>
+</body>
+</html>
